@@ -54,7 +54,11 @@ let s:REGEX_OR = '\|'
 
 "press [<number>] <Leader> h -> to highligt the whole word under the cursor
 "   highligted colour is determed by the number the number defined above
-nmap <Leader>h :<C-U> exe "call HighlightAdd(".v:count.",'\\<".expand('<cword>')."\\>')"<CR>
+nnoremap <Plug>HighlightWordUnderCursor :<C-U> exe "call HighlightAdd(".v:count.",'\\<".expand('<cword>')."\\>')"<CR>
+if !hasmapto('<Plug>HighlightWordUnderCursor', 'n') && (mapcheck("<Leader>h", "n") == "")
+  nmap <silent> <Leader>h <Plug>HighlightWordUnderCursor
+endif
+
 "NOTE: above funtion can match on an empty pattern '\<\>' however this doesn't
 "   seem to have any magor negetive effects so is not fixed
 
