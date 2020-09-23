@@ -43,20 +43,20 @@ KEYBINDING
 <leader> default is \
 
 [number] "<header>h"
-By default <leader> h will higlight the whole word under the cursor. Where
+By default <leader> h will highlight the whole word under the cursor. Where
 the highlighted colour/slot is determined by the preceding number. If
-no preceding number is provided it will instead use the specifed default
-slot set using ex command Hd, see below, which is inialised to slot 1.
+no preceding number is provided it will instead use the specified default
+slot set using ex command Hd, see below, which is initialised to slot 1.
 
 If you want to use your own key maping instead of "<leader>h". You can do so
 by placing the following in your init.vim/.vimrc file:
 	nmap <Leader>h <Plug>HighlightWordUnderCursor
-Where "<Leader>h" is replaced with your prefered key binding.
+Where "<Leader>h" is replaced with your preferred key binding.
 
-Slot numbers can be between 1 to 9, the default slot is specifed by Hd,
+Slot numbers can be between 1 to 9, the default slot is specified by Hd,
 see below.
 
-If the a word (or pattern) is added to a slot that already cointains it
+If a word (or pattern) is added to a slot that already contains it
 the pattern will be removed.
 
 
@@ -102,33 +102,48 @@ Will change the default slot to the slot number specified.
 ==============================================================================
 Section 4: To install
 
-Please use your prefered packaged manager by adding it into your
+Please use your preferred packaged manager by adding it into your
 init.vim/.vimrc file
 
 Plug example:
-	Plug 'neoclide/coc.nvim'
+	Plug 'pevhall/simple_highlighting'
 
 minpac example:
 	call minpac#add('pevhall/simple_highlighting')
+
+
+==============================================================================
+Section 5: init.vim/.vimrc Settings
+
+If the slot colours look too much the same please try setting the following in
+your init.vim/.vimrc:
+	set termguicolors
 
 If you want to change the default key mapping from "<Leader>h". Please
 add the follwing in your init.vim/.vimrc:
 	nmap <Leader>h <Plug>HighlightWordUnderCursor
 Where "<Leader>h" is replaced with your prefered key binding.
 
+If you are having a conflict with this plugin overriding other plugin's
+colours or vise versa. You can try changing the priority of this
+plugin. You can do this by setting
+	let g:highlightPriority = -1
+Values can be positive or negative. A higher value will give the plugin
+a higher priority making it override others. A value of 1 will override
+the inbuilt search highlighting (which you probably don't want).
+0 is currently the default. Chosen so that it is overriding  coc's
+CocActionAsync('highlight') by default. This plugin will always override
+regular syntax highlighting
+
 ==============================================================================
-Section 5: Wrap up
+Section 6: Wrap up
 
 ISSUES:
+
+Currently users cannot specify there own highlighting colours for different
+slots and/or change the number of slots. Let me know if this is something you
+would like to see added.
 
 Currently there are no known bugs.
 
 
-ALTERNATIVES:
-<http://vim.wikia.com/wiki/Highlight_multiple_words> is a very good
-alternative to this script. This script is designed to be simple and
-easy to use
-
-<http://www.vim.org/scripts/script.php?script_id=2666 > is a much more
-compressive and complex script then this one.
- 

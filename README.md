@@ -107,30 +107,43 @@ Please use your prefered packaged manager by adding it into your
 init.vim/.vimrc file
 
 Plug example:
-	Plug 'neoclide/coc.nvim'
+	Plug 'pevhall/simple_highlighting'
 
 minpac example:
 	call minpac#add('pevhall/simple_highlighting')
+
+
+==============================================================================
+Section 5: init.vim/.vimrc Settings
+
+If the slot colours look to much the same please try setting the following in
+your init.vim/.vimrc:
+	set termguicolors
 
 If you want to change the default key mapping from "<Leader>h". Please
 add the follwing in your init.vim/.vimrc:
 	nmap <Leader>h <Plug>HighlightWordUnderCursor
 Where "<Leader>h" is replaced with your prefered key binding.
 
+If you are having a conflict with this plugin overriding other plugin's
+colours or vise versa. You can try changing the priority of this
+plugin. You can do this by setting
+	let g:highlightPriority = -1
+Values can be positive or negative. A higher value will give the plugin
+a higher priority making it override others. A value of 1 will override
+the inbuilt search highlighting (which you probably don't want).
+0 is currently the default. Chosen so that it is overriding  coc's
+CocActionAsync('highlight') by default. This plugin will always override
+regular syntax highlighting
 ==============================================================================
 Section 5: Wrap up
 
 ISSUES:
 
+Currently users cannot specify there own highlighting colours for different
+slots and/or change the number of slots. Let me know if this is something you
+would like to see added.
+
 Currently there are no known bugs.
 
-
-ALTERNATIVES:
-<http://vim.wikia.com/wiki/Highlight_multiple_words> is a very good
-alternative to this script. This script is designed to be simple and
-easy to use
-
-<http://www.vim.org/scripts/script.php?script_id=2666 > is a much more
-compressive and complex script then this one.
- 
  ```

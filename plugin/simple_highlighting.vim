@@ -95,20 +95,20 @@ function HighlightWriteCommands(...)
 endfunction
 
 function HighlightPatternCommands(hlNum)
-	let cmds = []
+    let cmds = []
     if s:HighlightCheckNum(a:hlNum) && w:hlIdArr[a:hlNum] > 0
-		let str = 'Ha '.a:hlNum
-		let idx = 0
+        let str = 'Ha '.a:hlNum
+        let idx = 0
         for pat in g:hlPat[a:hlNum]
-			if idx == 10
-				let cmds += [str]
-				let str = 'Ha '.a:hlNum
-				let idx = 0
-			endif
-			let idx = idx+1
+            if idx == 10
+                let cmds += [str]
+                let str = 'Ha '.a:hlNum
+                let idx = 0
+            endif
+            let idx = idx+1
             let str = str.' '.substitute(pat, ' ', "\\\\ ", 'g')
         endfor
-		let cmds += [str]
+        let cmds += [str]
     endif
     return cmds
 endfunction
@@ -134,12 +134,17 @@ function HighlightAdd(hlNum, pattern)
     endif
 endfunction
 
-let s:HIGHLIGHT_PRIORITY = -1  " -1 => do not overide default serach highlighting
+
+if !exists("g:highlightPriority")
+	let g:highlightPriority = 0  " 0 => override coc's CocActionAsync('highlight') 
+                                      " but not normal serach highlight 
+endif
+
 function s:HighlightUpdatePriv(hlNum) "if patern is black will set w:hlIdArr[a:hlNum] to  -1
     if w:hlIdArr[a:hlNum] > 0
         call matchdelete(w:hlIdArr[a:hlNum])
     end
-    let w:hlIdArr[a:hlNum] = matchadd('hlg'.a:hlNum, HighlightPattern(a:hlNum), s:HIGHLIGHT_PRIORITY)
+    let w:hlIdArr[a:hlNum] = matchadd('hlg'.a:hlNum, HighlightPattern(a:hlNum), g:highlightPriority)
 endfunction
 
 function HighlightWinEnter()
