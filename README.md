@@ -43,13 +43,19 @@ KEYBINDING
 
 <leader> default is \
 
-[<number>] <Leader> h   -> to highlight the whole word under the cursor,
-highlighted colour is determined by the preceding number, if no number
-is given 0 is used
+[number] "<header>h"
+By default <leader> h will higlight the whole word under the cursor. Where
+the highlighted colour/slot is determined by the preceding number. If
+no preceding number is provided it will instead use the specifed default
+slot set using ex command Hd, see below, which is inialised to slot 1.
 
-numbers can be between 0 to 7 default is 0. More highlight numbers/slots
-can be added and there representative colour's changed at the start of
-the script.
+If you want to use your own key maping instead of "<leader>h". You can do so
+by placing the following in your init.vim/.vimrc file:
+	nmap <Leader>h <Plug>HighlightWordUnderCursor
+Where "<Leader>h" is replaced with your prefered key binding.
+
+Slot numbers can be between 1 to 9, the default slot is specifed by Hd,
+see below.
 
 If the a word (or pattern) is added to a slot that already cointains it
 the pattern will be removed.
@@ -66,13 +72,13 @@ it will simply remove the word/pattern.
 COMMANDS
 
 *Hc* *HighlightClear*
-	:Hc [0 2 ...]
+	:Hc [1 4 ...]
 Clears the highlighted patterns in slot numbers listed or all if no
 number(s) are passed. If you just which to remove one word from the slot
 please see changing / removing slots above
 
 *Hs* *HighlightSearch*
-	:Hs [0 2 ...]
+	:Hs [1 4 ...]
 Changes the search pattern to the highlighted slot numbers listed or
 all if no number(s) passed
 
@@ -83,16 +89,36 @@ highlight slot specified in <slot_number>. The patterns support regular
 expressions. To include a space use \ as escape character (eg "\ ")
 
 *Hw* *HighlightWrite*
-	:Hw <file_location> [0 2 ...]
+	:Hw <file_location> [1 4 ...]
 Create a vim source file at <file_location> containing the settings for
 the slot number(s) passed (or all slots if no numbers are passed)
  
 To load the file created from HighlightWrite simple source it using
 	:source <file_location>
 
+*Hd* *HighlightDefault*
+	:Hd <slot number>
+Will change the default slot to the slot number specified.
 
 ==============================================================================
-Section 4: Wrap up
+Section 4: To install
+
+Please use your prefered packaged manager by adding it into your
+init.vim/.vimrc file
+
+Plug example:
+	Plug 'neoclide/coc.nvim'
+
+minpac example:
+	call minpac#add('pevhall/simple_highlighting')
+
+If you want to change the default key mapping from "<Leader>h". Please
+add the follwing in your init.vim/.vimrc:
+	nmap <Leader>h <Plug>HighlightWordUnderCursor
+Where "<Leader>h" is replaced with your prefered key binding.
+
+==============================================================================
+Section 5: Wrap up
 
 ISSUES:
 
@@ -106,4 +132,5 @@ easy to use
 
 <http://www.vim.org/scripts/script.php?script_id=2666 > is a much more
 compressive and complex script then this one.
+ 
  ```
