@@ -1,3 +1,8 @@
+if exists("g:loaded_simple_highlighting")
+  finish
+endif
+let g:loaded_simple_highlighting = 1
+
 " Basic Functions {{{
 function NewArray(length, elemVal)
     let retVal = []
