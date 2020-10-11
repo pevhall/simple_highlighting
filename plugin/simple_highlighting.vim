@@ -38,35 +38,32 @@ com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 
 "function modified from <https://stackoverflow.com/questions/1533565/how-to-get-visually-selected-text-in-vimscript>
 function! VisualSelection()
-	let [line_start, column_start] = getpos("'<")[1:2]
-	let [line_end, column_end] = getpos("'>")[1:2]
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end,   column_end  ] = getpos("'>")[1:2]
 
     if (line2byte(line_start)+column_start) > (line2byte(line_end)+column_end)
         let [line_start, column_start, line_end, column_end] =
         \   [line_end, column_end, line_start, column_start]
     end
-	if line_start == line_end && column_start == column_end
-		return '' " we have nothing to select
-	endif
+"    if line_start == line_end && column_start == column_end
+"        return [''] " we have nothing to select
+"    endif
+"    let column_end -= 1 "I needed to remove the last character to make it match the visual selction
     let lines = getline(line_start, line_end)
-"	if len(lines) != 1 " 
-"        return '' "script currently doesn't work with multiple lines
-"	endif
-	let column_end -= 1 "I needed to remove the last character to make it match the visual selction
     if len(lines) == 0
-            return ''
+            return ['']
     endif
-	if visualmode() == "\<C-V>"
-		for idx in range(len(lines))
-			let lines[idx] = lines[idx][: column_end - 1]
-			let lines[idx] = lines[idx][column_start - 1:]
-		endfor
-	else
-		let lines[-1] = lines[-1][: column_end - 1]
-		let lines[ 0] = lines[ 0][column_start - 1:]
-	endif
+    if visualmode() == "\<C-V>"
+        for idx in range(len(lines))
+            let lines[idx] = lines[idx][: column_end - 1]
+            let lines[idx] = lines[idx][column_start - 1:]
+        endfor
+    else
+        let lines[-1] = lines[-1][: column_end - 1]
+        let lines[ 0] = lines[ 0][column_start - 1:]
+    endif
     return lines  
-	"return join(lines, "\n")
+    "return join(lines, "\n")
 endfunction
 
 
@@ -157,9 +154,9 @@ endfunction
 
 function HighlightAddVisual(hlNum)
     let patternLines = VisualSelection()
-	for pattern in patternLines
-		call HighlightAdd(a:hlNum, pattern)
-	endfor
+    for pattern in patternLines
+        call HighlightAdd(a:hlNum, pattern)
+    endfor
 endfunction
 
 function HighlightAdd(hlNum, pattern)
