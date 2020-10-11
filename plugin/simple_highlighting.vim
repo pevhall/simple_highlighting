@@ -36,12 +36,47 @@ function! WinDo(command)
 endfunction
 com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 
+"function modified from <https://stackoverflow.com/questions/1533565/how-to-get-visually-selected-text-in-vimscript>
+function! VisualSelection()
+	let [line_start, column_start] = getpos("'<")[1:2]
+	let [line_end, column_end] = getpos("'>")[1:2]
+
+    if (line2byte(line_start)+column_start) > (line2byte(line_end)+column_end)
+        let [line_start, column_start, line_end, column_end] =
+        \   [line_end, column_end, line_start, column_start]
+    end
+	if line_start == line_end && column_start == column_end
+		return '' " we have nothing to select
+	endif
+    let lines = getline(line_start, line_end)
+"	if len(lines) != 1 " 
+"        return '' "script currently doesn't work with multiple lines
+"	endif
+	let column_end -= 1 "I needed to remove the last character to make it match the visual selction
+    if len(lines) == 0
+            return ''
+    endif
+	if visualmode() == "\<C-V>"
+		for idx in range(len(lines))
+			let lines[idx] = lines[idx][: column_end - 1]
+			let lines[idx] = lines[idx][column_start - 1:]
+		endfor
+	else
+		let lines[-1] = lines[-1][: column_end - 1]
+		let lines[ 0] = lines[ 0][column_start - 1:]
+	endif
+    return lines  
+	"return join(lines, "\n")
+endfunction
+
+
 " }}}
 
 "Highlight words extension {{{
 "
 " useful web link: http://www.ibm.com/developerworks/linux/library/l-vim-script-1/index.html
-" http://vim.wikia.com/wiki/Highlight_multiple_words
+" http:/:vs
+" /vim.wikia.com/wiki/Highlight_multiple_words
 
 highlight hlg1 ctermbg=DarkGreen   guibg=DarkGreen      ctermfg=white guifg=white
 highlight hlg2 ctermbg=DarkCyan    guibg=DarkCyan       ctermfg=white guifg=white
@@ -60,8 +95,10 @@ let s:REGEX_OR = '\|'
 "press [<number>] <Leader> h -> to highligt the whole word under the cursor
 "   highligted colour is determed by the number the number defined above
 nnoremap <Plug>HighlightWordUnderCursor :<C-U> exe "call HighlightAdd(".v:count.",'\\<".expand('<cword>')."\\>')"<CR>
+vnoremap <Plug>HighlightWordUnderCursor :<C-U> exe "call HighlightAddVisual(".v:count.")"<CR>
 if !hasmapto('<Plug>HighlightWordUnderCursor', 'n') && (mapcheck("<Leader>h", "n") == "")
   nmap <silent> <Leader>h <Plug>HighlightWordUnderCursor
+  vmap <silent> <Leader>h <Plug>HighlightWordUnderCursor
 endif
 
 "NOTE: above funtion can match on an empty pattern '\<\>' however this doesn't
@@ -118,6 +155,13 @@ function HighlightPatternCommands(hlNum)
     return cmds
 endfunction
 
+function HighlightAddVisual(hlNum)
+    let patternLines = VisualSelection()
+	for pattern in patternLines
+		call HighlightAdd(a:hlNum, pattern)
+	endfor
+endfunction
+
 function HighlightAdd(hlNum, pattern)
     if a:hlNum == 0
       let hlNum = g:hlDefaultNum
@@ -141,7 +185,7 @@ endfunction
 
 
 if !exists("g:highlightPriority")
-	let g:highlightPriority = 0  " 0 => override coc's CocActionAsync('highlight') 
+    let g:highlightPriority = 0  " 0 => override coc's CocActionAsync('highlight') 
                                       " but not normal serach highlight 
 endif
 

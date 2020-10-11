@@ -42,13 +42,19 @@ KEYBINDING
 
 <leader> default is \
 
-[number] "<header>h"
-By default <leader> h will highlight the whole word under the cursor. Where
+[number] "<leader>h"
+This key mapping can be changed if you look at section 5 settings.
+
+In normal mode this will highlight the whole word under the cursor. Where
 the highlighted colour/slot is determined by the preceding number. If
 no preceding number is provided it will instead use the specified default
 slot set using ex command Hd, see below, which is initialised to slot 1.
 
-If you want to use your own key maping instead of "<leader>h". You can do so
+In visual mode this will highlight the selected text into the supplied
+colour/slot, determined by the preceding number if any. This will not do whole
+words.
+
+If you want to use your own key mapping instead of "<leader>h". You can do so
 by placing the following in your init.vim/.vimrc file:
 	nmap <Leader>h <Plug>HighlightWordUnderCursor
 Where "<Leader>h" is replaced with your preferred key binding.
@@ -72,7 +78,7 @@ COMMANDS
 
 *Hc* *HighlightClear*
 	:Hc [1 4 ...]
-Clears the highlighted patterns in slot numbers listed or all if no
+Clears the highlighted patterns in slot numbers listed or all if no:hel
 number(s) are passed. If you just which to remove one word from the slot
 please see changing / removing slots above
 
@@ -122,6 +128,7 @@ your init.vim/.vimrc:
 If you want to change the default key mapping from "<Leader>h". Please
 add the follwing in your init.vim/.vimrc:
 	nmap <Leader>h <Plug>HighlightWordUnderCursor
+	vmap <Leader>h <Plug>HighlightWordUnderCursor
 Where "<Leader>h" is replaced with your prefered key binding.
 
 If you are having a conflict with this plugin overriding other plugin's
@@ -138,12 +145,19 @@ regular syntax highlighting
 ==============================================================================
 Section 6: Wrap up
 
-ISSUES:
+Minor issues:
+
+Currently highlighting through visual selection will treat every line as
+a new match pattern. The vim function matchadd doesn't seem to work with new
+lines in it.
+
+When highliting through visual block selection and you if you have different
+levels of tabs between the lines this will cause the wrong text to be
+selected. If you need to do this I currently recommend using a macro.
+
+Limitation:
 
 Currently users cannot specify there own highlighting colours for different
 slots and/or change the number of slots. Let me know if this is something you
 would like to see added.
-
-Currently there are no known bugs.
-
 
