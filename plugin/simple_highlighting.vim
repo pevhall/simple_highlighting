@@ -45,15 +45,14 @@ function! VisualSelection()
         let [line_start, column_start, line_end, column_end] =
         \   [line_end, column_end, line_start, column_start]
     end
-"    if line_start == line_end && column_start == column_end
-"        return [''] " we have nothing to select
-"    endif
-"    let column_end -= 1 "I needed to remove the last character to make it match the visual selction
     let lines = getline(line_start, line_end)
     if len(lines) == 0
             return ['']
     endif
-    if visualmode() == "\<C-V>"
+	if &selection ==# "exclusive"
+	    let column_end -= 1 "I needed to remove the last character to make it match the visual selctiona
+	endif
+    if visualmode() ==# "\<C-V>"
         for idx in range(len(lines))
             let lines[idx] = lines[idx][: column_end - 1]
             let lines[idx] = lines[idx][column_start - 1:]
