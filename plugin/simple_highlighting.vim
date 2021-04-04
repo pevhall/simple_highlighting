@@ -27,6 +27,21 @@ function FlatternStrArr(strArr, seperator) "Flattern String Array into signal st
     return ret
 endfunction
 
+"function to add excape characters in a string to characters which are considered magic
+function StringEscMagic(str)
+	let str = a:str
+	let str = substitute(str, '\\', '\\\\', 'g')
+	let str = substitute(str, '\^', '\\^', 'g')
+	let str = substitute(str, '\$', '\\$', 'g')
+	let str = substitute(str, '\.', '\\.', 'g')
+	let str = substitute(str, '\*', '\\*', 'g')
+	let str = substitute(str, '\~', '\\~', 'g')
+	let str = substitute(str, '\[', '\\[', 'g')
+	let str = substitute(str, '\]', '\\]', 'g')
+"	let str = substitute(str, '\&', '\\&', 'g')
+	return str
+endfunction
+
 "function below taken form <http://vim.wikia.com/wiki/Windo_and_restore_current_window>
 " Just like windo, but restore the current window when done.
 function! WinDo(command)
@@ -154,8 +169,13 @@ endfunction
 function HighlightAddVisual(hlNum)
     let patternLines = VisualSelection()
     for pattern in patternLines
-        call HighlightAdd(a:hlNum, pattern)
+        call HighlightAddEscMagic(a:hlNum, pattern)
     endfor
+endfunction
+
+function HighlightAddEscMagic(hlNum, pattern)
+	let pattern = StringEscMagic(a:pattern)
+	call HighlightAdd(a:hlNum, pattern)
 endfunction
 
 function HighlightAdd(hlNum, pattern)
