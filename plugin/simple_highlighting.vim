@@ -281,7 +281,7 @@ endfunction
 function HighlightPatternInSlot(pattern)
     for hlNum in range(s:TOTAL_HL_NUMBERS)
         for patIdx in range(len(g:hlPat[hlNum]))
-            if a:pattern == g:hlPat[hlNum][patIdx]
+            if a:pattern ==# g:hlPat[hlNum][patIdx]
                 return [hlNum, patIdx]
             endif
         endfor
