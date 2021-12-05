@@ -117,15 +117,16 @@ endif
 
 "Hc [0,2...] -> clears the highlighted patters listed or all if no arguments
 "   are passed
-command -nargs=* Hc call HighlightClear(<f-args>)
+command -nargs=* Hc  call HighlightClear(<f-args>)
 
-command -nargs=* Hs call HighlightSearch(<f-args>) | set hlsearch
+command -nargs=* Hs  call HighlightSearch(<f-args>) | set hlsearch
 
-command -nargs=+ Ha call HighlightAddMultiple(<f-args>)
+command -nargs=+ Ha  call HighlightAddMultiple(<f-args>)
 
-command -nargs=+ Hw call HighlightWriteCommands(<f-args>)
+command -nargs=+ Hw  call HighlightWriteCommands(<f-args>)
+command -nargs=* Hwb call HighlightCommandsBuffer(<f-args>)
 
-command -nargs=1 Hd call HighlightSetDefaultSlot(<f-args>)
+command -nargs=1 Hd  call HighlightSetDefaultSlot(<f-args>)
 
 let g:hlDefaultNum = 1
 
@@ -133,17 +134,29 @@ function HighlightSetDefaultSlot(hlNum)
   let g:hlDefaultNum = a:hlNum
 endfunction
 
-function HighlightWriteCommands(...)
+function HighlightCommandsBuffer(...)
+    let cmds = HighlightCommandsString(a:000)
+    call append(0, cmds)
+endfunction
+
+function HighlightCommandsString(...)
     let cmds = []
     if a:0 == 1
         for idx in range(s:TOTAL_HL_NUMBERS)
             let cmds+=HighlightPatternCommands(eval(idx))
         endfor
     else
-        for idx in range(3, a:0)
+        for idx in range(2, a:0)
             let cmds+=HighlightPatternCommands(eval('a:'.idx))
         endfor
     endif
+    return cmds
+endfunction
+
+
+function HighlightWriteCommands(...)
+    let cmds = HighlightCommandsString(a:000[1:])
+    echo cmds
     call writefile(cmds, a:1)
 endfunction
 
