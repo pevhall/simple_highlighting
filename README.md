@@ -98,8 +98,14 @@ expressions. To include a space use \ as escape character (eg "\ ")
 	:Hw <file_location> [1 4 ...]
 Create a vim source file at <file_location> containing the settings for
 the slot number(s) passed (or all slots if no numbers are passed)
+
+*Hwb* *HighlightCommandsBuffer*
+	:Hwb [1 4 ...]
+Create a new buffer containing the settings for the slot number(s) passed
+(or all slots if no numbers are passed).
  
-To load the file created from HighlightWrite simple source it using
+To load the file created from HighlightWrite or HighlightCommandsBuffer
+simply source it using
 	:source <file_location>
 
 *Hd* *HighlightDefault*
